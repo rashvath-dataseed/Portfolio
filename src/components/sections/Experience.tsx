@@ -1,9 +1,12 @@
 import { motion } from 'framer-motion';
 import { Briefcase, MapPin, Calendar } from 'lucide-react';
 import SectionHeading from '../ui/SectionHeading';
-import { experiences } from '../../config/data';
+import { usePublishedPortfolioData } from "../../context/PortfolioContext";
 
 export default function Experience() {
+  const { data } = usePublishedPortfolioData();
+  if (!data) return null;
+
   return (
     <section
       id="experience"
@@ -20,12 +23,12 @@ export default function Experience() {
           {/* Timeline Line */}
           <div className="absolute left-4 top-0 hidden h-full w-px bg-neutral-800 sm:left-6 md:block" />
 
-          {experiences.map((exp, i) => (
+          {data.experience.map((exp, i) => (
             <motion.div
-              key={i}
+              key={exp.id}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
+              viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="relative md:pl-16"
             >
@@ -42,7 +45,7 @@ export default function Experience() {
                     <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-neutral-400">
                       <span className="flex items-center gap-1">
                         <Briefcase size={13} />
-                        {exp.company}
+                        {exp.companyName}
                       </span>
                       <span className="flex items-center gap-1">
                         <MapPin size={13} />
@@ -52,21 +55,24 @@ export default function Experience() {
                   </div>
                   <span className="flex items-center gap-1 rounded-md bg-neutral-800 px-2.5 py-1 text-xs font-medium text-neutral-400">
                     <Calendar size={12} />
-                    {exp.period}
+                    {exp.duration}
                   </span>
                 </div>
 
                 {/* Description */}
                 <ul className="mt-5 space-y-2.5">
-                  {exp.description.map((item, j) => (
-                    <li
-                      key={j}
-                      className="flex gap-3 text-sm leading-relaxed text-neutral-300"
-                    >
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-neutral-600" />
-                      {item}
-                    </li>
-                  ))}
+                  {exp.description
+                    .split("\n")
+                    .filter(Boolean)
+                    .map((item, j) => (
+                      <li
+                        key={j}
+                        className="flex gap-3 text-sm leading-relaxed text-neutral-300"
+                      >
+                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-neutral-600" />
+                        {item}
+                      </li>
+                    ))}
                 </ul>
               </div>
             </motion.div>

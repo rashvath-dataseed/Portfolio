@@ -1,16 +1,35 @@
 import { motion } from 'framer-motion';
 import { ArrowDown, Mail } from 'lucide-react';
+import type { ComponentType } from "react";
+import { Link } from "react-router-dom";
 import { GitHubIcon, LinkedInIcon } from '../ui/SocialIcons';
 import Button from '../ui/Button';
-import { siteConfig, socialLinks } from '../../config/data';
+import { usePublishedPortfolioData } from "../../context/PortfolioContext";
 
-const socialIconMap: Record<string, React.ComponentType<{ size?: number }>> = {
+const socialIconMap: Record<string, ComponentType<{ size?: number }>> = {
   github: GitHubIcon,
   linkedin: LinkedInIcon,
   email: Mail,
 };
 
 export default function Hero() {
+  const { data } = usePublishedPortfolioData();
+  if (!data) return null;
+
+  const socialLinks = [
+    { label: "GitHub", href: data.personalInfo.githubUrl, icon: "github" },
+    {
+      label: "LinkedIn",
+      href: data.personalInfo.linkedinUrl,
+      icon: "linkedin",
+    },
+    {
+      label: "Email",
+      href: `mailto:${data.personalInfo.email}`,
+      icon: "email",
+    },
+  ].filter((item) => item.href);
+
   return (
     <section
       id="hero"
@@ -39,11 +58,11 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mt-8 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl"
-          style={{ textShadow: '0 0 40px rgba(255,255,255,0.15)' }}
+          style={{ textShadow: "0 0 40px rgba(255,255,255,0.15)" }}
         >
-          Hi, I'm{' '}
+          Hi, I'm{" "}
           <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            {siteConfig.name}
+            {data.personalInfo.fullName}
           </span>
         </motion.h1>
 
@@ -54,12 +73,12 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.35 }}
           className="mt-6 text-lg leading-relaxed text-neutral-300 sm:text-xl"
         >
-          {siteConfig.title} building scalable frontend solutions with{' '}
-          <span className="font-medium text-white">React</span>,{' '}
-          <span className="font-medium text-white">Next.js</span>, and{' '}
+          {data.personalInfo.designation} building scalable frontend solutions
+          with <span className="font-medium text-white">React</span>,{" "}
+          <span className="font-medium text-white">Next.js</span>, and{" "}
           <span className="font-medium text-white">TypeScript</span>.
           <br className="hidden sm:block" />
-          Based in {siteConfig.location}.
+          Based in {data.personalInfo.location}.
         </motion.p>
 
         {/* CTAs */}
@@ -69,10 +88,10 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="mt-10 flex flex-wrap items-center justify-center gap-4"
         >
-          <Button href="#contact" size="lg">
+          <Button href="/contact" size="lg">
             Get in Touch
           </Button>
-          <Button href="#projects" variant="secondary" size="lg">
+          <Button href="/projects" variant="secondary" size="lg">
             View Projects
           </Button>
         </motion.div>
@@ -110,19 +129,21 @@ export default function Hero() {
         transition={{ delay: 1.2, duration: 0.5 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
-        <a
-          href="#about"
+        <Link
+          to="/about"
           aria-label="Scroll to about section"
           className="flex flex-col items-center gap-2 text-neutral-500 transition-colors hover:text-neutral-300"
         >
-          <span className="text-xs font-medium uppercase tracking-widest">Scroll</span>
+          <span className="text-xs font-medium uppercase tracking-widest">
+            Scroll
+          </span>
           <motion.div
             animate={{ y: [0, 6, 0] }}
-            transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
+            transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
           >
             <ArrowDown size={16} />
           </motion.div>
-        </a>
+        </Link>
       </motion.div>
     </section>
   );

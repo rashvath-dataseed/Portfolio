@@ -3,24 +3,38 @@ import { motion } from 'framer-motion';
 import { Send, Mail, Phone, MapPin, CheckCircle } from 'lucide-react';
 import SectionHeading from '../ui/SectionHeading';
 import Button from '../ui/Button';
-import { siteConfig } from '../../config/data';
+import {
+  usePortfolio,
+  usePublishedPortfolioData,
+} from "../../context/PortfolioContext";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const { data } = usePublishedPortfolioData();
+  const { submitContact } = usePortfolio();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  if (!data) return null;
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // In production, integrate with your email service (EmailJS, Formspree, etc.)
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    setSubmitting(true);
+    await submitContact({
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      subject: String(formData.get("subject") ?? ""),
+      message: String(formData.get("message") ?? ""),
+    });
+    setSubmitting(false);
+    form.reset();
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 4000);
   };
 
   return (
-    <section
-      id="contact"
-      className="py-20 sm:py-28"
-      aria-label="Contact"
-    >
+    <section id="contact" className="py-20 sm:py-28" aria-label="Contact">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           title="Get in Touch"
@@ -32,7 +46,7 @@ export default function Contact() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5 }}
             className="space-y-6 lg:col-span-2"
           >
@@ -41,28 +55,29 @@ export default function Contact() {
                 Contact Information
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-neutral-400">
-                Feel free to reach out through the form or contact me directly using the details below.
+                Feel free to reach out through the form or contact me directly
+                using the details below.
               </p>
             </div>
 
             <div className="space-y-4">
               <a
-                href={`mailto:${siteConfig.email}`}
+                href={`mailto:${data.contactInfo.email}`}
                 className="flex items-center gap-3 rounded-lg p-2 text-sm text-neutral-400 transition-colors hover:bg-neutral-800/50 hover:text-white"
               >
                 <Mail size={16} className="text-neutral-500" />
-                {siteConfig.email}
+                {data.contactInfo.email}
               </a>
               <a
-                href={`tel:${siteConfig.phone}`}
+                href={`tel:${data.contactInfo.phone}`}
                 className="flex items-center gap-3 rounded-lg p-2 text-sm text-neutral-400 transition-colors hover:bg-neutral-800/50 hover:text-white"
               >
                 <Phone size={16} className="text-neutral-500" />
-                {siteConfig.phone}
+                {data.contactInfo.phone}
               </a>
               <div className="flex items-center gap-3 p-2 text-sm text-neutral-400">
                 <MapPin size={16} className="text-neutral-500" />
-                {siteConfig.location}
+                {data.personalInfo.location}
               </div>
             </div>
           </motion.div>
@@ -71,7 +86,7 @@ export default function Contact() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.15 }}
             className="lg:col-span-3"
           >
@@ -86,6 +101,7 @@ export default function Contact() {
                   </label>
                   <input
                     id="contact-name"
+                    name="name"
                     type="text"
                     required
                     placeholder="Your name"
@@ -101,6 +117,7 @@ export default function Contact() {
                   </label>
                   <input
                     id="contact-email"
+                    name="email"
                     type="email"
                     required
                     placeholder="your@email.com"
@@ -118,6 +135,7 @@ export default function Contact() {
                 </label>
                 <input
                   id="contact-subject"
+                  name="subject"
                   type="text"
                   required
                   placeholder="What is this about?"
@@ -134,6 +152,7 @@ export default function Contact() {
                 </label>
                 <textarea
                   id="contact-message"
+                  name="message"
                   rows={5}
                   required
                   placeholder="Tell me about your project or opportunity..."
@@ -142,9 +161,9 @@ export default function Contact() {
               </div>
 
               <div className="flex items-center gap-4">
-                <Button type="submit" size="lg">
+                <Button type="submit" size="lg" disabled={submitting}>
                   <Send size={16} />
-                  Send Message
+                  {submitting ? "Sending..." : "Send Message"}
                 </Button>
 
                 {submitted && (

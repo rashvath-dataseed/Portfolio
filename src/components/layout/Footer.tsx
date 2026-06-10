@@ -1,14 +1,24 @@
 import { Mail, ArrowUp } from 'lucide-react';
+import type { ComponentType } from "react";
 import { GitHubIcon, LinkedInIcon } from '../ui/SocialIcons';
-import { siteConfig, socialLinks } from '../../config/data';
+import { usePublishedPortfolioData } from "../../context/PortfolioContext";
 
-const iconMap: Record<string, React.ComponentType<{ size?: number }>> = {
+const iconMap: Record<string, ComponentType<{ size?: number }>> = {
   github: GitHubIcon,
   linkedin: LinkedInIcon,
   email: Mail,
 };
 
 export default function Footer() {
+  const { data } = usePublishedPortfolioData();
+  if (!data) return null;
+
+  const socialLinks = [
+    { label: "GitHub", href: data.contactInfo.github, icon: "github" },
+    { label: "LinkedIn", href: data.contactInfo.linkedIn, icon: "linkedin" },
+    { label: "Email", href: `mailto:${data.contactInfo.email}`, icon: "email" },
+  ].filter((item) => item.href);
+
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
@@ -18,11 +28,11 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <span className="font-display text-lg font-bold text-white">
-              {siteConfig.name.split(' ')[0]}
+              {data.personalInfo.fullName.split(" ")[0]}
               <span className="text-accent-500">.</span>
             </span>
             <p className="mt-1 text-sm text-neutral-400">
-              {siteConfig.title}
+              {data.personalInfo.designation}
             </p>
           </div>
 
@@ -56,7 +66,8 @@ export default function Footer() {
 
         <div className="mt-8 border-t border-neutral-700/40 pt-6 text-center">
           <p className="text-xs text-neutral-500">
-            {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+            {new Date().getFullYear()} {data.personalInfo.fullName}. All rights
+            reserved.
           </p>
         </div>
       </div>

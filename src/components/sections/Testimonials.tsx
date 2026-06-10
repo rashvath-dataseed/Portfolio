@@ -1,9 +1,12 @@
 import { motion } from 'framer-motion';
 import { Quote } from 'lucide-react';
 import SectionHeading from '../ui/SectionHeading';
-import { testimonials } from '../../config/data';
+import { usePublishedPortfolioData } from "../../context/PortfolioContext";
 
 export default function Testimonials() {
+  const { data } = usePublishedPortfolioData();
+  if (!data) return null;
+
   return (
     <section
       id="testimonials"
@@ -17,19 +20,16 @@ export default function Testimonials() {
         />
 
         <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
-          {testimonials.map((t, i) => (
+          {data.testimonials.map((t, i) => (
             <motion.blockquote
-              key={i}
+              key={t.id}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
+              viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.45, delay: i * 0.1 }}
               className="rounded-xl border border-neutral-700/40 bg-neutral-900/70 p-6 backdrop-blur-sm"
             >
-              <Quote
-                size={20}
-                className="mb-4 text-neutral-700"
-              />
+              <Quote size={20} className="mb-4 text-neutral-700" />
               <p className="text-sm leading-relaxed text-neutral-300">
                 {t.text}
               </p>
@@ -42,7 +42,7 @@ export default function Testimonials() {
                     {t.name}
                   </cite>
                   <span className="text-xs text-neutral-400">
-                    {t.role}, {t.company}
+                    {t.designation}, {t.company}
                   </span>
                 </div>
               </footer>
