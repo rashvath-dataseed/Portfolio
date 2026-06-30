@@ -9,7 +9,7 @@ export const defaultPortfolioData: PortfolioData = {
     shortBio:
       "Building scalable frontend solutions with React, Next.js, and TypeScript.",
     aboutMe:
-      "I am a Software Developer at Ekfrazo Technologies, where I build reusable, performant frontend systems and collaborate in Agile teams to ship production-grade features.",
+      "I am a Software Developer at Ekfrazo Technologies, where I build scalable frontend applications using React.js and Next.js with reusable components and modular architecture.\nI started as a Software Developer Intern in February 2025 and was converted to a full-time role in September 2025 based on consistent performance and technical contributions.\nMy work spans frontend systems, REST API integrations, Node.js and Express.js backend development, PostgreSQL workflows, and enterprise CMS customization.",
     location: "Bangalore, Karnataka, India",
     email: "rashvathshetty4@gmail.com",
     phone: "+91 9148050368",
@@ -64,7 +64,7 @@ export const defaultPortfolioData: PortfolioData = {
         "Live weather updates with animated, location-aware responsive UI.",
       techStack: ["React", "Weather API", "Tailwind CSS"],
       projectImage: "",
-      liveUrl: "https://rashvath.github.io/WeatherApp/",
+      liveUrl: "https://rashvath.github.io/WeatherNow",
       githubUrl: "",
       startDate: "",
       endDate: "",
@@ -316,7 +316,7 @@ export const defaultPortfolioData: PortfolioData = {
       duration: "Feb 2025 - Present",
       location: "Remote",
       description:
-        "Recruited as an intern and converted to full-time. Developed scalable frontend apps using React/Next.js, built role-based UI modules, integrated REST APIs, and contributed to Node.js/Express.js backends and PostgreSQL workflows.",
+        "Recruited as a Software Developer Intern (Feb 2025 - Sep 2025) and converted to a full-time Software Developer role based on performance and contributions.\nDeveloped scalable frontend applications using React.js and Next.js with reusable components and modular architecture.\nDesigned and implemented dynamic role-based UI components, forms, and tables to support maintainable and reusable application workflows.\nBuilt responsive interfaces using Tailwind CSS and implemented Zod-based validation for type-safe and secure form handling.\nDesigned and integrated REST APIs for real-time data handling and seamless frontend-backend communication.\nWorked on Node.js and Express.js backend development, building secure APIs with authentication, middleware handling, and role-based access control.\nDesigned and integrated PostgreSQL database workflows including relational data handling, query optimization, and scalable API structures.\nConfigured and customized Sitefinity CMS for enterprise clients, including custom content types and taxonomy structures.\nUsed Git with feature branching, pull requests, and code reviews while collaborating in Agile development environments.",
       technologiesUsed: [
         "React",
         "Next.js",
@@ -372,7 +372,7 @@ export const defaultPortfolioData: PortfolioData = {
       publishedAt: now,
       institutionName: "Dr. BB Hegde First Grade College, Kundapura",
       degree: "Bachelor of Computer Applications (BCA)",
-      specialization: "",
+      specialization: "Mangalore University",
       duration: "2021 - 2024",
       grade: "CGPA: 6.25",
     },
@@ -408,7 +408,7 @@ export const defaultPortfolioData: PortfolioData = {
     linkedIn: "https://linkedin.com/in/rashvath-shetty-507438286",
     github: "https://github.com/rashvath",
     twitterX: "",
-    portfolioUrl: "",
+    portfolioUrl: "https://www.rashvath-shetty.in",
   },
   settings: {
     darkModeDefault: true,

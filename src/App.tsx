@@ -9,8 +9,7 @@ import Certifications from './components/sections/Certifications';
 import Philosophy from './components/sections/Philosophy';
 import Contact from './components/sections/Contact';
 import Testimonials from "./components/sections/Testimonials";
-import FloatingLines from './components/ui/FloatingLines';
-import TargetCursor from "./components/ui/TargetCursor";
+import FloatingLines from "./components/ui/FloatingLines";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import AdminLogin from "./pages/AdminLogin";
@@ -47,11 +46,6 @@ function PortfolioShell() {
 
   return (
     <>
-      <TargetCursor
-        spinDuration={2}
-        hideDefaultCursor={true}
-        parallaxOn={true}
-      />
       <div
         className="relative min-h-screen"
         style={{ backgroundColor: "#000" }}
