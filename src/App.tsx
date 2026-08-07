@@ -1,15 +1,16 @@
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-import Hero from './components/sections/Hero';
-import About from './components/sections/About';
-import Skills from './components/sections/Skills';
-import Experience from './components/sections/Experience';
-import Projects from './components/sections/Projects';
-import Certifications from './components/sections/Certifications';
-import Philosophy from './components/sections/Philosophy';
-import Contact from './components/sections/Contact';
-import Testimonials from "./components/sections/Testimonials";
-import FloatingLines from "./components/ui/FloatingLines";
+import Hero from "./components/sections/Hero";
+import About from "./components/sections/About";
+import Skills from "./components/sections/Skills";
+import Experience from "./components/sections/Experience";
+import Education from "./components/sections/Education";
+import Projects from "./components/sections/Projects";
+import Certifications from "./components/sections/Certifications";
+import Contact from "./components/sections/Contact";
+import CursorGlow from "./components/ui/CursorGlow";
+import ScrollProgressBar from "./components/ui/ScrollProgressBar";
+import DotIndicator from "./components/ui/DotIndicator";
+import FloatingParticlesCanvas from "./components/ui/FloatingParticlesCanvas";
+import GradientBlobs from "./components/ui/GradientBlobs";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import AdminLogin from "./pages/AdminLogin";
@@ -46,44 +47,23 @@ function PortfolioShell() {
 
   return (
     <>
-      <div
-        className="relative min-h-screen"
-        style={{ backgroundColor: "#000" }}
-      >
-        <div className="fixed inset-0 z-0" style={{ opacity: 0.45 }}>
-          <FloatingLines
-            enabledWaves={["top", "middle", "bottom"]}
-            lineCount={8}
-            lineDistance={8}
-            bendRadius={8}
-            bendStrength={-2}
-            interactive
-            parallax={true}
-            animationSpeed={1}
-            gradientStart="#e945f5"
-            gradientMid="#6f6f6f"
-            gradientEnd="#6a6a6a"
-          />
-        </div>
+      {/* ── Global Effects ── */}
+      <GradientBlobs />
+      <FloatingParticlesCanvas />
+      <CursorGlow />
+      <ScrollProgressBar />
+      <DotIndicator />
 
-        <div className="relative z-9 flex min-h-screen flex-col">
-          <Navbar />
-          <main className="flex-1 pt-14 md:pt-10">
-            <Routes>
-              <Route path="/" element={<Hero />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/skills" element={<Skills />} />
-              <Route path="/experience" element={<Experience />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/certifications" element={<Certifications />} />
-              <Route path="/testimonials" element={<Testimonials />} />
-              <Route path="/philosophy" element={<Philosophy />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+      {/* ── Single-Page Scroll Container ── */}
+      <div className="relative z-10 scroll-snap-container">
+        <Hero />
+        <About />
+        <Skills />
+        <Experience />
+        <Education />
+        <Projects />
+        <Certifications />
+        <Contact />
       </div>
     </>
   );
@@ -110,7 +90,8 @@ export default function App() {
             <Route path="analytics" element={<AdminAnalytics />} />
           </Route>
         </Route>
-        <Route path="*" element={<PortfolioShell />} />
+        <Route path="/" element={<PortfolioShell />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );

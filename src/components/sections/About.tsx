@@ -1,37 +1,42 @@
-import { motion } from "framer-motion";
-import SectionHeading from "../ui/SectionHeading";
+import CinematicSection from "../ui/CinematicSection";
 import { usePublishedPortfolioData } from "../../context/PortfolioContext";
 
 export default function About() {
   const { data } = usePublishedPortfolioData();
   if (!data) return null;
 
-  const aboutText = data.personalInfo.aboutMe
+  const paragraphs = data.personalInfo.aboutMe
     .split("\n")
     .map((item) => item.trim())
-    .filter(Boolean)
-    .join(" ");
+    .filter(Boolean);
 
   return (
-    <section id="about" className="py-20 sm:py-28" aria-label="About me">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          title="About Me"
-          subtitle="A brief introduction to who I am and what I do."
-        />
-
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5 }}
-          className="mx-auto max-w-4xl"
-        >
-          <p className="text-center text-base leading-relaxed text-neutral-300 sm:text-lg">
-            {aboutText}
+    <CinematicSection id="about">
+      <div className="section-container text-center">
+        {/* Premium Section Heading */}
+        <div data-stagger className="relative">
+          <div className="section-heading-glow" />
+          <h2 className="section-heading font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+            About Me
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-neutral-400">
+            A brief introduction to who I am and what I do.
           </p>
-        </motion.div>
+          <div className="section-accent-line" />
+        </div>
+
+        <div className="mx-auto mt-12 max-w-4xl space-y-6">
+          {paragraphs.map((p, i) => (
+            <p
+              key={i}
+              data-stagger
+              className="text-center text-base leading-relaxed text-neutral-300 sm:text-lg"
+            >
+              {p}
+            </p>
+          ))}
+        </div>
       </div>
-    </section>
+    </CinematicSection>
   );
 }

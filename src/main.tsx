@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { PortfolioProvider } from "./context/PortfolioContext";
+import SmoothScrollProvider from "./components/providers/SmoothScrollProvider";
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -13,7 +14,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <AuthProvider>
         <PortfolioProvider>
           <ThemeProvider>
-            <App />
+            <SmoothScrollProvider>
+              <App />
+            </SmoothScrollProvider>
           </ThemeProvider>
         </PortfolioProvider>
       </AuthProvider>

@@ -1,12 +1,19 @@
-import { useState, type FormEvent } from 'react';
-import { motion } from 'framer-motion';
-import { Send, Mail, Phone, MapPin, CheckCircle } from 'lucide-react';
-import SectionHeading from '../ui/SectionHeading';
-import Button from '../ui/Button';
+import { useState, type FormEvent } from "react";
+import { Send, Mail, MapPin, CheckCircle, Phone, Globe } from "lucide-react";
+import type { ComponentType } from "react";
 import {
   usePortfolio,
   usePublishedPortfolioData,
 } from "../../context/PortfolioContext";
+import { GitHubIcon, LinkedInIcon } from "../ui/SocialIcons";
+import MagneticButton from "../ui/MagneticButton";
+import CinematicSection from "../ui/CinematicSection";
+
+const socialIconMap: Record<string, ComponentType<{ size?: number }>> = {
+  github: GitHubIcon,
+  linkedin: LinkedInIcon,
+  email: Mail,
+};
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
@@ -24,7 +31,7 @@ export default function Contact() {
     await submitContact({
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
-      subject: String(formData.get("subject") ?? ""),
+      subject: "Portfolio Contact",
       message: String(formData.get("message") ?? ""),
     });
     setSubmitting(false);
@@ -33,155 +40,170 @@ export default function Contact() {
     setTimeout(() => setSubmitted(false), 4000);
   };
 
+  const socialLinks = [
+    { label: "GitHub", href: data.contactInfo.github, icon: "github" },
+    { label: "LinkedIn", href: data.contactInfo.linkedIn, icon: "linkedin" },
+    { label: "Email", href: `mailto:${data.contactInfo.email}`, icon: "email" },
+  ].filter((item) => item.href);
+
   return (
-    <section id="contact" className="py-20 sm:py-28" aria-label="Contact">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          title="Get in Touch"
-          subtitle="Have a project in mind or want to discuss an opportunity? I would love to hear from you."
-        />
+    <CinematicSection id="contact" fullScreen>
+      <div className="section-container flex items-center justify-center">
+        <div className="w-full max-w-3xl">
+          {/* Premium Heading */}
+          <div className="mb-8 text-center relative" data-stagger>
+            <div className="section-heading-glow" />
+            <h2 className="section-heading font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+              Let's Work Together
+            </h2>
+            <p className="mx-auto mt-3 max-w-lg text-base text-neutral-400">
+              Have a project in mind or want to discuss an opportunity? I'd love to hear from you.
+            </p>
+          </div>
 
-        <div className="mx-auto grid max-w-4xl gap-10 lg:grid-cols-5 lg:gap-16">
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5 }}
-            className="space-y-6 lg:col-span-2"
-          >
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-neutral-500">
-                Contact Information
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-neutral-400">
-                Feel free to reach out through the form or contact me directly
-                using the details below.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <a
-                href={`mailto:${data.contactInfo.email}`}
-                className="flex items-center gap-3 rounded-lg p-2 text-sm text-neutral-400 transition-colors hover:bg-neutral-800/50 hover:text-white"
-              >
-                <Mail size={16} className="text-neutral-500" />
-                {data.contactInfo.email}
-              </a>
-              <a
-                href={`tel:${data.contactInfo.phone}`}
-                className="flex items-center gap-3 rounded-lg p-2 text-sm text-neutral-400 transition-colors hover:bg-neutral-800/50 hover:text-white"
-              >
-                <Phone size={16} className="text-neutral-500" />
-                {data.contactInfo.phone}
-              </a>
-              <div className="flex items-center gap-3 p-2 text-sm text-neutral-400">
-                <MapPin size={16} className="text-neutral-500" />
-                {data.personalInfo.location}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="lg:col-span-3"
-          >
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="contact-name"
-                    className="mb-1.5 block text-sm font-medium text-neutral-300"
+          {/* Glassmorphism Card */}
+          <div className="glass-card p-6 sm:p-8" data-stagger>
+            <div className="grid gap-8 lg:grid-cols-5">
+              {/* Left: Info */}
+              <div className="space-y-5 lg:col-span-2">
+                {/* Contact details */}
+                <div className="space-y-3">
+                  <a
+                    href={`mailto:${data.contactInfo.email}`}
+                    className="flex items-center gap-3 rounded-lg px-2 py-1.5 text-sm text-neutral-300 transition-colors hover:bg-white/5 hover:text-white"
                   >
-                    Name
-                  </label>
-                  <input
-                    id="contact-name"
-                    name="name"
-                    type="text"
-                    required
-                    placeholder="Your name"
-                    className="w-full rounded-lg border border-neutral-700 bg-neutral-900/70 px-4 py-2.5 text-sm text-white placeholder-neutral-500 backdrop-blur-sm transition-colors focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
-                  />
+                    <Mail size={15} className="text-accent-400" />
+                    {data.contactInfo.email}
+                  </a>
+                  <a
+                    href={`tel:${data.contactInfo.phone}`}
+                    className="flex items-center gap-3 rounded-lg px-2 py-1.5 text-sm text-neutral-300 transition-colors hover:bg-white/5 hover:text-white"
+                  >
+                    <Phone size={15} className="text-accent-400" />
+                    {data.contactInfo.phone}
+                  </a>
+                  <div className="flex items-center gap-3 px-2 py-1.5 text-sm text-neutral-300">
+                    <MapPin size={15} className="text-accent-400" />
+                    {data.personalInfo.location}
+                  </div>
+                  <a
+                    href={data.contactInfo.portfolioUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 rounded-lg px-2 py-1.5 text-sm text-neutral-300 transition-colors hover:bg-white/5 hover:text-white"
+                  >
+                    <Globe size={15} className="text-accent-400" />
+                    {data.contactInfo.portfolioUrl}
+                  </a>
                 </div>
-                <div>
-                  <label
-                    htmlFor="contact-email"
-                    className="mb-1.5 block text-sm font-medium text-neutral-300"
-                  >
-                    Email
-                  </label>
-                  <input
-                    id="contact-email"
-                    name="email"
-                    type="email"
-                    required
-                    placeholder="your@email.com"
-                    className="w-full rounded-lg border border-neutral-700 bg-neutral-900/70 px-4 py-2.5 text-sm text-white placeholder-neutral-500 backdrop-blur-sm transition-colors focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
-                  />
+
+                {/* Social Links */}
+                <div className="flex items-center gap-2 pt-2">
+                  {socialLinks.map((link) => {
+                    const Icon = socialIconMap[link.icon];
+                    if (!Icon) return null;
+                    return (
+                      <MagneticButton key={link.label} strength={0.4}>
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-700/50 text-neutral-400 transition-all duration-200 hover:border-neutral-600 hover:bg-white/5 hover:text-white"
+                          aria-label={link.label}
+                        >
+                          <Icon size={16} />
+                        </a>
+                      </MagneticButton>
+                    );
+                  })}
                 </div>
               </div>
 
-              <div>
-                <label
-                  htmlFor="contact-subject"
-                  className="mb-1.5 block text-sm font-medium text-neutral-300"
-                >
-                  Subject
-                </label>
-                <input
-                  id="contact-subject"
-                  name="subject"
-                  type="text"
-                  required
-                  placeholder="What is this about?"
-                  className="w-full rounded-lg border border-neutral-700 bg-neutral-900/70 px-4 py-2.5 text-sm text-white placeholder-neutral-500 backdrop-blur-sm transition-colors focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
-                />
-              </div>
+              {/* Right: Form */}
+              <div className="lg:col-span-3">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label
+                        htmlFor="contact-name"
+                        className="mb-1 block text-xs font-medium text-neutral-400"
+                      >
+                        Name
+                      </label>
+                      <input
+                        id="contact-name"
+                        name="name"
+                        type="text"
+                        required
+                        placeholder="Your name"
+                        className="w-full rounded-lg border border-neutral-700/60 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-neutral-500 backdrop-blur-sm transition-colors focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="contact-email"
+                        className="mb-1 block text-xs font-medium text-neutral-400"
+                      >
+                        Email
+                      </label>
+                      <input
+                        id="contact-email"
+                        name="email"
+                        type="email"
+                        required
+                        placeholder="your@email.com"
+                        className="w-full rounded-lg border border-neutral-700/60 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-neutral-500 backdrop-blur-sm transition-colors focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                      />
+                    </div>
+                  </div>
 
-              <div>
-                <label
-                  htmlFor="contact-message"
-                  className="mb-1.5 block text-sm font-medium text-neutral-300"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="contact-message"
-                  name="message"
-                  rows={5}
-                  required
-                  placeholder="Tell me about your project or opportunity..."
-                  className="w-full resize-none rounded-lg border border-neutral-700 bg-neutral-900/70 px-4 py-2.5 text-sm text-white placeholder-neutral-500 backdrop-blur-sm transition-colors focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
-                />
-              </div>
+                  <div>
+                    <label
+                      htmlFor="contact-message"
+                      className="mb-1 block text-xs font-medium text-neutral-400"
+                    >
+                      Message
+                    </label>
+                    <textarea
+                      id="contact-message"
+                      name="message"
+                      rows={3}
+                      required
+                      placeholder="Tell me about your project..."
+                      className="w-full resize-none rounded-lg border border-neutral-700/60 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-neutral-500 backdrop-blur-sm transition-colors focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                    />
+                  </div>
 
-              <div className="flex items-center gap-4">
-                <Button type="submit" size="lg" disabled={submitting}>
-                  <Send size={16} />
-                  {submitting ? "Sending..." : "Send Message"}
-                </Button>
+                  <div className="flex items-center gap-3">
+                    <MagneticButton>
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-medium text-neutral-900 transition-all duration-200 hover:bg-neutral-200 disabled:opacity-50"
+                      >
+                        <Send size={14} />
+                        {submitting ? "Sending..." : "Send Message"}
+                      </button>
+                    </MagneticButton>
 
-                {submitted && (
-                  <motion.span
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="flex items-center gap-1.5 text-sm font-medium text-emerald-400"
-                  >
-                    <CheckCircle size={16} />
-                    Message sent!
-                  </motion.span>
-                )}
+                    {submitted && (
+                      <span className="flex items-center gap-1.5 text-sm font-medium text-emerald-400">
+                        <CheckCircle size={14} />
+                        Message sent!
+                      </span>
+                    )}
+                  </div>
+                </form>
               </div>
-            </form>
-          </motion.div>
+            </div>
+          </div>
+
+          {/* Footer mini */}
+          <p className="mt-6 text-center text-xs text-neutral-600">
+            © {new Date().getFullYear()} {data.personalInfo.fullName}. All rights reserved.
+          </p>
         </div>
       </div>
-    </section>
+    </CinematicSection>
   );
 }

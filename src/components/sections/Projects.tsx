@@ -1,9 +1,8 @@
-import { ExternalLink } from 'lucide-react';
-import Card from '../ui/Card';
-import Badge from '../ui/Badge';
-import SectionHeading from '../ui/SectionHeading';
+import { ExternalLink } from "lucide-react";
 import { usePublishedPortfolioData } from "../../context/PortfolioContext";
 import { recordProjectView } from "../../lib/portfolioStore";
+import CinematicSection from "../ui/CinematicSection";
+import TiltCard from "../ui/TiltCard";
 
 export default function Projects() {
   const { data } = usePublishedPortfolioData();
@@ -14,59 +13,75 @@ export default function Projects() {
   );
 
   return (
-    <section id="projects" className="py-20 sm:py-28" aria-label="Projects">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          title="Projects"
-          subtitle="Selected work showcasing my skills and problem-solving approach."
-        />
+    <CinematicSection id="projects">
+      <div className="section-container">
+        {/* Premium Section Heading */}
+        <div className="mb-12 text-center md:mb-16 relative" data-stagger>
+          <div className="section-heading-glow" />
+          <h2 className="section-heading font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+            Projects
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-neutral-400">
+            Selected work showcasing my skills and problem-solving approach.
+          </p>
+          <div className="section-accent-line" />
+        </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, i) => (
-            <Card key={project.title} delay={i * 0.1} className="flex flex-col">
-              {/* Header */}
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h3 className="font-display text-base font-semibold text-white">
-                    {project.title}
-                  </h3>
-                  <p className="mt-1 text-xs font-medium text-neutral-400">
-                    {project.techStack.join(", ")}
-                  </p>
+            <TiltCard key={project.title} maxTilt={6}>
+              <div
+                data-stagger
+                className="flex h-full flex-col rounded-xl border border-neutral-700/40 bg-neutral-900/70 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-neutral-600/50 hover:shadow-lg hover:shadow-accent-500/5"
+                style={{ transitionDelay: `${i * 80}ms` }}
+              >
+                {/* Header */}
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="font-display text-base font-semibold text-white">
+                      {project.title}
+                    </h3>
+                    <p className="mt-1 text-xs font-medium text-neutral-400">
+                      {project.techStack.join(", ")}
+                    </p>
+                  </div>
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      onClick={() => {
+                        void recordProjectView(project.id);
+                      }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white"
+                      aria-label={`View ${project.title} live`}
+                    >
+                      <ExternalLink size={16} />
+                    </a>
+                  )}
                 </div>
-                {project.liveUrl && (
-                  <a
-                    href={project.liveUrl}
-                    onClick={() => {
-                      void recordProjectView(project.id);
-                    }}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white"
-                    aria-label={`View ${project.title} live`}
-                  >
-                    <ExternalLink size={16} />
-                  </a>
-                )}
-              </div>
 
-              {/* Description */}
-              <p className="mt-4 flex-1 text-sm leading-relaxed text-neutral-300">
-                {project.description}
-              </p>
+                {/* Description */}
+                <p className="mt-4 flex-1 text-sm leading-relaxed text-neutral-300">
+                  {project.description}
+                </p>
 
-              {/* Tags */}
-              <div className="mt-5 flex flex-wrap gap-1.5">
-                {project.techStack.map((tag) => (
-                  <Badge key={tag} variant="outline">
-                    {tag}
-                  </Badge>
-                ))}
+                {/* Tags */}
+                <div className="mt-5 flex flex-wrap gap-1.5">
+                  {project.techStack.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center rounded-md border border-neutral-700 px-2.5 py-0.5 text-xs font-medium text-neutral-400 transition-colors"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </Card>
+            </TiltCard>
           ))}
         </div>
       </div>
-    </section>
+    </CinematicSection>
   );
 }

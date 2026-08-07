@@ -65,6 +65,25 @@ function mergeWithDefaults(incoming: Partial<PortfolioData>): PortfolioData {
   if (!merged.education?.length)
     merged.education = defaultPortfolioData.education;
 
+  const projectTitles = new Set(
+    (merged.projects ?? []).map((project) =>
+      (project.title ?? "").trim().toLowerCase(),
+    ),
+  );
+  const hasLegacyPersonalProjectSet =
+    (merged.projects?.length ?? 0) <= 3 &&
+    projectTitles.has("e-commerce app") &&
+    projectTitles.has("crypto tracker") &&
+    projectTitles.has("weathernow");
+  const hasClientProjects =
+    projectTitles.has("au bank - multi-currency forex platform") ||
+    projectTitles.has("ebixcash - card distribution platform") ||
+    projectTitles.has("target peak - admin portal") ||
+    projectTitles.has("bank of india - corporate website");
+  if (hasLegacyPersonalProjectSet && !hasClientProjects) {
+    merged.projects = defaultPortfolioData.projects;
+  }
+
   // Migrate older sparse resume payloads to richer defaults.
   const firstExperience = merged.experience?.[0];
   const experienceLineCount = (firstExperience?.description ?? "")
@@ -82,6 +101,41 @@ function mergeWithDefaults(incoming: Partial<PortfolioData>): PortfolioData {
   );
   if (!hasMangaloreUniversity) {
     merged.education = defaultPortfolioData.education;
+  }
+
+  const primaryExperience = merged.experience?.[0];
+  const isLegacyExperience =
+    (merged.experience?.length ?? 0) === 1 &&
+    (primaryExperience?.companyName ?? "") === "Ekfrazo Technologies Pvt. Ltd." &&
+    (primaryExperience?.description ?? "")
+      .toLowerCase()
+      .includes("recruited as a software developer intern");
+  if (isLegacyExperience) {
+    merged.experience = defaultPortfolioData.experience;
+  }
+
+  const hasResponsibilityFormat =
+    (primaryExperience?.description ?? "")
+      .toLowerCase()
+      .includes("build scalable web applications using react, next.js, and typescript");
+  const shouldRefreshExperienceCopy =
+    (merged.experience?.length ?? 0) === 1 &&
+    (primaryExperience?.companyName ?? "") === "Ekfrazo Technologies Pvt. Ltd." &&
+    !hasResponsibilityFormat;
+  if (shouldRefreshExperienceCopy) {
+    merged.experience = defaultPortfolioData.experience;
+  }
+
+  const skillNames = new Set(
+    (merged.skills ?? []).map((item) => item.name.trim().toLowerCase()),
+  );
+  const isLegacySkills =
+    (merged.skills?.length ?? 0) <= 24 &&
+    skillNames.has("sitefinity") &&
+    !skillNames.has("material ui") &&
+    !skillNames.has("axios");
+  if (isLegacySkills) {
+    merged.skills = defaultPortfolioData.skills;
   }
 
   return merged;
