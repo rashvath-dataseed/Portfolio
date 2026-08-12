@@ -1,5 +1,7 @@
-import { ExternalLink } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 import { usePublishedPortfolioData } from "../../context/PortfolioContext";
+import { getProjectDetailsPath } from "../../lib/projectRouting";
 import { recordProjectView } from "../../lib/portfolioStore";
 import CinematicSection from "../ui/CinematicSection";
 import TiltCard from "../ui/TiltCard";
@@ -29,7 +31,7 @@ export default function Projects() {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, i) => (
-            <TiltCard key={project.title} maxTilt={6}>
+            <TiltCard key={project.id} maxTilt={6}>
               <div
                 data-stagger
                 className="flex h-full flex-col rounded-xl border border-neutral-700/40 bg-neutral-900/70 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-neutral-600/50 hover:shadow-lg hover:shadow-accent-500/5"
@@ -38,9 +40,22 @@ export default function Projects() {
                 {/* Header */}
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="font-display text-base font-semibold text-white">
-                      {project.title}
-                    </h3>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="font-display text-base font-semibold text-white">
+                        {project.title}
+                      </h3>
+                      <Link
+                        to={getProjectDetailsPath(project)}
+                        onClick={() => {
+                          void recordProjectView(project.id);
+                        }}
+                        className="inline-flex items-center gap-1 rounded-md border border-neutral-700 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-neutral-200 transition-colors hover:bg-neutral-800/70"
+                        aria-label={`Explore details for ${project.title}`}
+                      >
+                        Explore
+                        <ArrowRight size={12} />
+                      </Link>
+                    </div>
                     <p className="mt-1 text-xs font-medium text-neutral-400">
                       {project.techStack.join(", ")}
                     </p>
@@ -77,6 +92,7 @@ export default function Projects() {
                     </span>
                   ))}
                 </div>
+
               </div>
             </TiltCard>
           ))}

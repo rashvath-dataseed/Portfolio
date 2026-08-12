@@ -25,6 +25,8 @@ export interface PersonalInfo {
 export interface Project extends BaseEntity {
   title: string;
   description: string;
+  slug?: string;
+  detailedDescription?: string;
   techStack: string[];
   projectImage: string;
   liveUrl: string;

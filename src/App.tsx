@@ -28,6 +28,7 @@ import AdminTestimonials from "./pages/admin/AdminTestimonials";
 import AdminContact from "./pages/admin/AdminContact";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import ProjectDetails from "./pages/ProjectDetails";
 import { recordVisit } from "./lib/portfolioStore";
 
 function ScrollToTop() {
@@ -91,6 +92,7 @@ export default function App() {
           </Route>
         </Route>
         <Route path="/" element={<PortfolioShell />} />
+        <Route path="/projects/:projectSlug" element={<ProjectDetails />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import Button from "../../components/ui/Button";
 import { usePortfolio } from "../../context/PortfolioContext";
+import { slugifyProjectTitle } from "../../lib/projectRouting";
 import type { ContentStatus, Project } from "../../types/portfolio";
 
 const statusOptions: ContentStatus[] = ["draft", "published", "archived"];
@@ -8,6 +9,8 @@ const statusOptions: ContentStatus[] = ["draft", "published", "archived"];
 const emptyProject: Omit<Project, "id" | "updatedAt" | "publishedAt"> = {
   title: "",
   description: "",
+  slug: "",
+  detailedDescription: "",
   techStack: [],
   projectImage: "",
   liveUrl: "",
@@ -24,6 +27,12 @@ export default function AdminProjects() {
   const [form, setForm] = useState(emptyProject);
   const [query, setQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<"all" | ContentStatus>("all");
+
+  const normalizeProjectPayload = (payload: typeof form): typeof form => ({
+    ...payload,
+    slug: payload.slug?.trim() || slugifyProjectTitle(payload.title),
+    detailedDescription: payload.detailedDescription?.trim() || "",
+  });
 
   const rows = useMemo(() => {
     if (!data) return [];
@@ -46,6 +55,12 @@ export default function AdminProjects() {
             placeholder="Project Title"
             value={form.title}
             onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))}
+            className="rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white"
+          />
+          <input
+            placeholder="Slug (optional, e.g. my-project-name)"
+            value={form.slug ?? ""}
+            onChange={(event) => setForm((prev) => ({ ...prev, slug: event.target.value }))}
             className="rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white"
           />
           <input
@@ -104,12 +119,21 @@ export default function AdminProjects() {
           onChange={(event) => setForm((prev) => ({ ...prev, description: event.target.value }))}
           className="mt-3 w-full rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white"
         />
+        <textarea
+          rows={10}
+          placeholder="In-depth project details"
+          value={form.detailedDescription ?? ""}
+          onChange={(event) =>
+            setForm((prev) => ({ ...prev, detailedDescription: event.target.value }))
+          }
+          className="mt-3 w-full rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white"
+        />
 
         <div className="mt-4 flex items-center gap-3">
           <Button
             onClick={async () => {
               if (!form.title.trim()) return;
-              await upsertItem("projects", form);
+              await upsertItem("projects", normalizeProjectPayload(form));
               setForm(emptyProject);
             }}
           >
@@ -119,7 +143,10 @@ export default function AdminProjects() {
             variant="secondary"
             onClick={async () => {
               if (!form.title.trim()) return;
-              await upsertItem("projects", { ...form, status: "published" });
+              await upsertItem("projects", {
+                ...normalizeProjectPayload(form),
+                status: "published",
+              });
               setForm(emptyProject);
             }}
           >
@@ -185,10 +212,12 @@ export default function AdminProjects() {
                 </button>
                 <button
                   onClick={async () => {
+                    const copiedTitle = `${project.title} (Copy)`;
                     await upsertItem("projects", {
                       ...project,
                       id: undefined,
-                      title: `${project.title} (Copy)`,
+                      title: copiedTitle,
+                      slug: slugifyProjectTitle(copiedTitle),
                     });
                   }}
                   className="rounded-md border border-neutral-700 px-2 py-1 text-xs text-neutral-200"

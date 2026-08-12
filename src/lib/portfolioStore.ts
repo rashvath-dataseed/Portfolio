@@ -27,6 +27,27 @@ function mergeById<T extends { id: string }>(
   return [...byId.values()];
 }
 
+function backfillFromDefaultsById<T extends { id: string }>(
+  defaults: T[],
+  incoming?: T[],
+): T[] {
+  if (!incoming?.length) return defaults;
+
+  const defaultById = new Map<string, T>();
+  defaults.forEach((item) => {
+    defaultById.set(item.id, item);
+  });
+
+  return incoming.map((item) => {
+    const fallback = defaultById.get(item.id);
+    if (!fallback) return item;
+    return {
+      ...fallback,
+      ...item,
+    };
+  });
+}
+
 function mergeWithDefaults(incoming: Partial<PortfolioData>): PortfolioData {
   const merged = {
     ...defaultPortfolioData,
@@ -43,6 +64,10 @@ function mergeWithDefaults(incoming: Partial<PortfolioData>): PortfolioData {
       ...defaultPortfolioData.settings,
       ...(incoming.settings ?? {}),
     },
+    projects: backfillFromDefaultsById(
+      defaultPortfolioData.projects,
+      incoming.projects,
+    ),
     analytics: {
       ...defaultPortfolioData.analytics,
       ...(incoming.analytics ?? {}),
