@@ -15,7 +15,10 @@ export default function Projects() {
   );
 
   return (
-    <CinematicSection id="projects">
+    <CinematicSection
+      id="projects"
+      className="scroll-mt-24 items-start overflow-visible pt-10 pb-8 md:scroll-mt-28 md:pt-12 md:pb-10"
+    >
       <div className="section-container">
         {/* Premium Section Heading */}
         <div className="mb-12 text-center md:mb-16 relative" data-stagger>
